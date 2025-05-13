@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add Product - Admin</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Add New Product</h1>
+    <a onclick="goBack()" class="button"> ← Back to Dashboard</a>
+  </header>
+
+  <main>
+    <form id="add-product-form" class="product-form">
+      <label>
+        Name:
+        <input type="text" id="name" required>
+      </label>
+      <label>
+        Price:
+        <input type="number" id="price" step="0.01" required>
+      </label>
+      <label>
+        MercadoPago Link:
+        <input type="url" id="link" required>
+      </label>
+      <label class="images-label">
+        Images URLs (one per line):
+        <textarea id="images" rows="5" placeholder="https://...\nhttps://..."></textarea>
+      </label>
+      <button type="submit" class="primary-btn">Add Product</button>
+    </form>
+  </main>w
+  <script>function goBack(){window.location.href = 'admin.html';}</script>
+  <script src="js/utils.js"></script>
+  <script src="js/add-product.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<script src="js/utils.js"></script>
+<script src="js/admin.js"></script>
+<body>
+  <header>
+    <h1>Admin Dashboard</h1>
+    <nav>
+        <a href="index.html" class="button">← View Store</a>
+        <a onclick="loadProducts()" id="manageProductsBtn">🛠 Manage Products</button>
+        <a href="add-product.html">➕ Add New</button>
+        <a href="orders.html">📦 Orders</button>
+    </nav>
+  </header>
+  <main>
+    <section id="products-section">
+      <h2 style="padding-left: 2vw;">Products</h2>
+      <div id="admin-product-list" class="admin-product-list"></div>
+    </section>
+  </main>
+</body>
+</html>

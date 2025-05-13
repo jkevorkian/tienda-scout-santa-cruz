@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Product - Admin</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Edit Product</h1>
+    <a onclick="goBack()" class="button">← Back to Dashboard</a>
+  </header>
+
+  <main>
+    <form id="edit-product-form" class="product-form">
+      <input type="hidden" id="product-id">
+
+      <label>
+        Name:
+        <input type="text" id="name" required>
+      </label>
+      <label>
+        Price:
+        <input type="number" id="price" step="0.01" required>
+      </label>
+      <label>
+        MercadoPago Link:
+        <input type="url" id="link" required>
+      </label>
+
+      <div class="images-section">
+        <h3>Images</h3>
+        <div id="carousel-preview" class="carousel-preview"></div>
+        <label class="images-label">
+          Update Image URLs (one per line):
+          <textarea id="images" rows="5"></textarea>
+        </label>
+      </div>
+
+      <button type="submit" class="primary-btn">Save Changes</button>
+    </form>
+  </main>
+  <script>function goBack(){window.location.href = 'admin.html';}</script>
+  <script src="js/utils.js"></script>
+  <script src="js/edit-product.js"></script>
+</body>
+</html>

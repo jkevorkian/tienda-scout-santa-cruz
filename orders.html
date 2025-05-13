@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders Management - Admin</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Orders Management</h1>
+    <a onclick="goBack()" class="button">← Back to Dashboard</a>
+  </header>
+
+  <main>
+    <section class="orders-controls">
+      <label>Filter by status:
+        <select id="status-filter">
+          <option value="All">All</option>
+          <option value="Pending">Pending</option>
+          <option value="Completed">Completed</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </label>
+      <label>Sort by date:
+        <select id="sort-order">
+          <option value="desc">Newest First</option>
+          <option value="asc">Oldest First</option>
+        </select>
+      </label>
+    </section>
+
+    <div id="orders-list" class="orders-list"></div>
+  </main>
+  <script>function goBack(){window.location.href = 'admin.html';}</script>
+  <script src="js/utils.js"></script>
+  <script src="js/orders.js"></script>
+</body>
+</html>
