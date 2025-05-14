@@ -1,5 +1,5 @@
 const hojaID = '149AZ8LZUXG2W2CMTtvU93hlvPZEwMk4Efd6rODXK4S4'; // reemplazar con el ID real de tu Google Sheet
-const hojaNombre = 'products'; // nombre de la hoja dentro del archivo
+const hojaNombre = 'productos'; // nombre de la hoja dentro del archivo
 const url = `https://opensheet.elk.sh/${hojaID}/${hojaNombre}`;
 
 async function cargarProductos() {
