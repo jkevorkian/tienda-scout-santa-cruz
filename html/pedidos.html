@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="../media/Logo-de-grupo.png">
+  <title>Listado de Pedidos</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Pedidos</h1>
+    <a href="../index.html" class="admin-btn">Volver a productos</a>
+  </header>
+  <main>
+    <div id="login-container">
+      <h2>Acceso Admin</h2>
+      <form id="login-form">
+        <input type="password" id="admin-pass" placeholder="Contraseña de admin" required>
+        <button type="submit">Ingresar</button>
+      </form>
+      <p id="login-error" style="color:red; display:none;">Contraseña incorrecta</p>
+    </div>
+    <div id="pedidos-content" style="display:none;">
+      <input type="text" id="filtro" placeholder="Filtrar pedidos...">
+      <div id="tabla-pedidos-container"></div>
+    </div>
+  </main>
+  <script src="../js/pedidos.js"></script>
+  <script src="../js/admin-login.js"></script>
+</body>
+</html>

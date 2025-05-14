@@ -1,5 +1,5 @@
-const hojaID = '149AZ8LZUXG2W2CMTtvU93hlvPZEwMk4Efd6rODXK4S4'; // reemplazar con el ID real de tu Google Sheet
-const hojaNombre = 'productos'; // nombre de la hoja dentro del archivo
+const hojaID = '149AZ8LZUXG2W2CMTtvU93hlvPZEwMk4Efd6rODXK4S4'; //ID real del Google Sheet
+const hojaNombre = 'productos'; // nombre de la hoja dentro del sheet
 const url = `https://opensheet.elk.sh/${hojaID}/${hojaNombre}`;
 
 async function cargarProductos() {
@@ -7,7 +7,7 @@ async function cargarProductos() {
       const respuesta = await fetch(url);
       const productos = await respuesta.json();
   
-      console.log("Datos recibidos:", productos); // 👈 Esto imprime lo que devuelve la API
+      console.log("Datos recibidos:", productos);
   
       const contenedor = document.getElementById('productos');
   

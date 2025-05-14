@@ -12,6 +12,22 @@ body {
     text-align: center;
   }
   
+  .admin-btn {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1.2rem;
+    background: #388e3c;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s;
+  }
+  
+  .admin-btn:hover {
+    background: #256029;
+  }
+
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -124,7 +140,6 @@ body {
 
   /* Pedidos */
   
-/* ...existing code... */
 .tabla-pedidos {
   width: 100%;
   border-collapse: collapse;
