@@ -1,29 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es-AR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda Scout Santa Cruz</title>
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Merchandising Scout</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Tienda Scout Santa Cruz</h1>
-        <button id="cart-button">Cart (0)</button>
-        <a href="admin.html">Admin Login</a>
-    </header>
+  <header>
+    <h1>¡Tienda Scout!</h1>
+    <p>Conseguí la mejor merch oficial de la agrupación</p>
+  </header>
 
-    <main id="product-list">
-        <!-- Products injected by JS -->
-    </main>
+  <main>
+    <section id="productos" class="grid"></section>
+  </main>
 
-    <div id="cart" class="hidden">
-        <h2>Tu carrito</h2>
-        <ul id="cart-items"></ul>
-        <button id="checkout-button">Ir a Pagar</button>
-        <button id="close-cart">Cerrar</button>
-    </div>
-    <script src="js/utils.js"></script>
-    <script src="js/store.js"></script>
+  <footer>
+    <p>Grupo Scout - Todos los derechos reservados ©</p>
+  </footer>
+
+  <script src="index.js"></script>
 </body>
 </html>
