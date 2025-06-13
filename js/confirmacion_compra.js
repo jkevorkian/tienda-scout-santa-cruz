@@ -109,31 +109,33 @@ document.getElementById('form-compra').addEventListener('submit', async (e) => {
     return acc + parseFloat(prod.precio) * item.cantidad;
   }, 0);
 
-  const payload = {
-    estado: 'pendiente',
-    items_id: carrito,
-    monto: parseFloat(monto.toFixed(2)),
-    aclaraciones: `Nombre: ${nombre} | Email: ${email} | Tel: ${telefono} | Dirección: ${direccion}`
-  };
+  const formData = new FormData();
+  formData.append('entry.1022104370', 'pendiente'); // estado
+  formData.append('entry.1396134251', new Date().toISOString()); // fecha
+  formData.append('entry.328135372', JSON.stringify(carrito)); // items (como JSON)
+  formData.append('entry.1787440899', monto.toFixed(2)); // monto
 
-  const query = encodeURIComponent(JSON.stringify(payload));
-  const scriptURL = `https://script.google.com/macros/s/AKfycbyEpwdZTjDYsUA28pobduqicPIp8JoVVl2Y_Gw-f4gOTz06MQ77-b-7aC2y47Forq_l/exec?payload=${query}`;
+  formData.append('entry.408980864', nombre);     // nombre
+  formData.append('entry.363687813', email);      // email
+  formData.append('entry.371394709', telefono);   // telefono
+  formData.append('entry.845087169', direccion);  // direccion
 
   try {
-    const res = await fetch(scriptURL);
-    const result = await res.json();
-    if (result.success) {
-      alert('✅ Pedido registrado con éxito (ID: ' + result.id + ')');
-      localStorage.removeItem('carrito');
-      location.reload();
-    } else {
-      alert('❌ Ocurrió un error al registrar el pedido: ' + result.error);
-    }
+    await fetch('https://docs.google.com/forms/d/e/1FAIpQLSd1mZzTrJc6ifYlVbaaWfA75SjL4VbJoA7DQ0kx0xg5U_oNlg/formResponse', {
+      method: 'POST',
+      mode: 'no-cors',
+      body: formData
+    });
+
+    alert('✅ Pedido enviado con éxito');
+    localStorage.removeItem('carrito');
+    location.reload();
   } catch (err) {
     console.error('Error al enviar pedido:', err);
-    alert('❌ Error de conexión con el servidor.');
+    alert('❌ Error al registrar el pedido.');
   }
 });
+
 });
 window.cambiarCantidad = cambiarCantidad;
 window.eliminarItem = eliminarItem;
