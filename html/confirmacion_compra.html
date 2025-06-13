@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Confirmación de Compra</title>
+    <link rel="icon" href="../media/Logo-de-grupo.png">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Confirmación de Compra</h1>
+        <a href="../index.html" class="admin-btn">Volver a productos</a>
+    </header>
+
+    <main class="confirmacion-layout">
+        <div class="cart-container">
+            <h2>Tu carrito</h2>
+            <div id="carrito-lista"></div>
+            <p class="precio-total">Total: <strong id="precio-total">$0</strong></p>
+        </div>
+
+        <div class="compra-container">
+            <form id="form-compra">
+                <h2>Completa tus datos</h2>
+
+                <label for="nombre">Nombre completo*</label>
+                <input type="text" id="nombre" required>
+
+                <label for="email">Correo electrónico</label>
+                <input type="email" id="email">
+
+                <label for="telefono">Teléfono</label>
+                <input type="tel" id="telefono">
+
+                <label for="direccion">Dirección (opcional)</label>
+                <input type="text" id="direccion">
+
+                <button type="submit" id="btn-comprar" disabled>Comprar</button>
+            </form>
+        </div>
+    </main>
+
+
+    <footer>
+        <p>Comunidad Scout Santa Cruz - Todos los derechos reservados ©</p>
+    </footer>
+
+    <script src="../js/confirmacion_compra.js"></script>
+</body>
+
+</html>

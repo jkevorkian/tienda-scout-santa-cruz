@@ -86,5 +86,10 @@ async function cargarProductos() {
     }
   }
   
-
+document.addEventListener('DOMContentLoaded', () => {
+  const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+  const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+  const badge = document.getElementById('cart-count');
+  if (badge) badge.textContent = totalItems;
+});
 document.addEventListener('DOMContentLoaded', cargarProductos);

@@ -43,9 +43,11 @@ async function cargarDetalle() {
           <h2>${prod.nombre}</h2>
           <p>${prod.descripcion}</p>
           <p><strong>Precio: $${prod.precio}</strong></p>
-          <button class="btn-comprar" onclick="comprar(${itemId})">Comprar</button>
+          <div class="botones-compra">
+            <button class="btn-comprar" onclick="agregarAlCarrito(${itemId})">Añadir al carrito</button>
+            <button class="btn-comprar" onclick="comprar(${itemId})">Comprar</button>
+          </div>
         </div>
-      </div>
     `;
 
         const img = container.querySelector('.carrusel img');
@@ -127,7 +129,58 @@ function crearLightbox(imagenes, startIndex) {
 }
 
 function comprar(id) {
-    window.location.href = `confirmacion.html?id=${id}`;
+    const almacenado = localStorage.getItem('carrito');
+    const carrito = almacenado ? JSON.parse(almacenado) : [];
+
+    const existente = carrito.find(item => item.id === id);
+    if (existente) {
+        existente.cantidad += 1;
+    } else {
+        carrito.push({ id: id, cantidad: 1 });
+    }
+
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    window.location.href = `confirmacion_compra.html`;
 }
 
-document.addEventListener('DOMContentLoaded', cargarDetalle);
+function agregarAlCarrito(id) {
+  const almacenado = localStorage.getItem('carrito');
+  const carrito = almacenado ? JSON.parse(almacenado) : [];
+
+  const existente = carrito.find(item => item.id === id);
+  if (existente) {
+    existente.cantidad += 1;
+  } else {
+    carrito.push({ id: id, cantidad: 1 });
+  }
+
+  localStorage.setItem('carrito', JSON.stringify(carrito));
+  mostrarToast("Producto añadido al carrito");
+  actualizarContadorCarrito();
+}
+
+function mostrarToast(mensaje) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+
+  toast.textContent = mensaje;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2500);
+}
+
+function actualizarContadorCarrito() {
+  const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+  const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+  const badge = document.getElementById('cart-count');
+  if (badge) badge.textContent = totalItems;
+}
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  cargarDetalle();
+  actualizarContadorCarrito();
+});
+

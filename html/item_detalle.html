@@ -1,27 +1,36 @@
 <!DOCTYPE html>
 <html lang="es-AR">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Detalle de Producto</title>
-  <link rel="icon" href="../media/Logo-de-grupo.png">
-  <link rel="stylesheet" href="../css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detalle de Producto</title>
+    <link rel="icon" href="../media/Logo-de-grupo.png">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
+<div id="toast" class="toast">Producto añadido al carrito</div>
 <body>
-  <header>
-    <h1>¡Tienda Scout Santa Cruz!</h1>
-    <p>Conseguí la mejor merch oficial de la comunidad scout pasionista</p>
-    <a href="../index.html" class="admin-btn">Volver a productos</a>
-  </header>
+    <header>
+        <h1>¡Tienda Scout Santa Cruz!</h1>
+        <p>Conseguí la mejor merch oficial de la comunidad scout pasionista</p>
+        <div class="header-controls">
+            <a href="../index.html" class="header-btn left"> <--- Volver a productos</a>
+            <a href="../html/confirmacion_compra.html" class="header-btn right">
+                🛒 Carrito <span id="cart-count" class="cart-count">0</span>
+            </a>
+        </div>
+    </header>
 
-  <main id="item-detalle-container">
-    <!-- Contenido cargado dinámicamente -->
-  </main>
 
-  <footer>
-    <p>Comunidad Scout Santa Cruz - Todos los derechos reservados ©</p>
-  </footer>
+    <main id="item-detalle-container">
+        <!-- Contenido cargado dinámicamente -->
+    </main>
 
-  <script src="../js/item_detalle.js"></script>
+    <footer>
+        <p>Comunidad Scout Santa Cruz - Todos los derechos reservados ©</p>
+    </footer>
+
+    <script src="../js/item_detalle.js"></script>
 </body>
+
 </html>
