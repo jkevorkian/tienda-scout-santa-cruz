@@ -7,32 +7,32 @@ const params = new URLSearchParams(window.location.search);
 const itemId = parseInt(params.get('id'));
 
 async function cargarDetalle() {
-  try {
-    const res = await fetch(url);
-    const productos = await res.json();
+    try {
+        const res = await fetch(url);
+        const productos = await res.json();
 
-    if (!productos[itemId]) {
-      document.getElementById('item-detalle-container').innerHTML = '<p>Producto no encontrado.</p>';
-      return;
-    }
+        if (!productos[itemId]) {
+            document.getElementById('item-detalle-container').innerHTML = '<p>Producto no encontrado.</p>';
+            return;
+        }
 
-    const prod = productos[itemId];
+        const prod = productos[itemId];
 
-    // Obtener imágenes
-    let imagenes = [];
-    if (prod.imagenes) {
-      imagenes = prod.imagenes.includes('|')
-        ? prod.imagenes.split('|').map(url => url.trim())
-        : [prod.imagenes.trim()];
-    }
-    if (imagenes.length === 0 || !imagenes[0]) {
-      imagenes = ['https://www.carrielou.co.uk/image/cache/placeholder-550x550.png'];
-    }
+        // Obtener imágenes
+        let imagenes = [];
+        if (prod.imagenes) {
+            imagenes = prod.imagenes.includes('|')
+                ? prod.imagenes.split('|').map(url => url.trim())
+                : [prod.imagenes.trim()];
+        }
+        if (imagenes.length === 0 || !imagenes[0]) {
+            imagenes = ['https://www.carrielou.co.uk/image/cache/placeholder-550x550.png'];
+        }
 
-    let currentIndex = 0;
+        let currentIndex = 0;
 
-    const container = document.getElementById('item-detalle-container');
-    container.innerHTML = `
+        const container = document.getElementById('item-detalle-container');
+        container.innerHTML = `
       <div class="detalle-producto">
         <div class="carrusel">
           <button class="prev">&#10094;</button>
@@ -48,35 +48,86 @@ async function cargarDetalle() {
       </div>
     `;
 
-    const img = container.querySelector('.carrusel img');
-    const prev = container.querySelector('.prev');
-    const next = container.querySelector('.next');
+        const img = container.querySelector('.carrusel img');
+        const prev = container.querySelector('.prev');
+        const next = container.querySelector('.next');
+        img.addEventListener('click', () => {
+            crearLightbox(imagenes, currentIndex);
+        });
 
-    const cambiarImagen = (i) => {
-      img.classList.remove('fade');
-      void img.offsetWidth;
-      img.src = imagenes[i];
-      img.classList.add('fade');
+        const cambiarImagen = (i) => {
+            img.classList.remove('fade');
+            void img.offsetWidth;
+            img.src = imagenes[i];
+            img.classList.add('fade');
+        };
+
+        prev.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + imagenes.length) % imagenes.length;
+            cambiarImagen(currentIndex);
+        });
+
+        next.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % imagenes.length;
+            cambiarImagen(currentIndex);
+        });
+
+    } catch (err) {
+        console.error("Error al cargar el detalle:", err);
+        document.getElementById('item-detalle-container').innerHTML = '<p>Error al cargar el producto.</p>';
+    }
+}
+
+function crearLightbox(imagenes, startIndex) {
+    let currentIndex = startIndex;
+
+    // Create lightbox container
+    const lightbox = document.createElement('div');
+    lightbox.classList.add('lightbox');
+
+    // Inner content
+    lightbox.innerHTML = `
+      <div class="lightbox-content">
+        <button class="lightbox-prev">&#10094;</button>
+        <img src="${imagenes[currentIndex]}" alt="zoomed image">
+        <button class="lightbox-next">&#10095;</button>
+      </div>
+    `;
+
+    document.body.appendChild(lightbox);
+
+    const img = lightbox.querySelector('img');
+    const prev = lightbox.querySelector('.lightbox-prev');
+    const next = lightbox.querySelector('.lightbox-next');
+
+    const updateImage = (i) => {
+        img.src = imagenes[i];
     };
 
     prev.addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + imagenes.length) % imagenes.length;
-      cambiarImagen(currentIndex);
+        currentIndex = (currentIndex - 1 + imagenes.length) % imagenes.length;
+        updateImage(currentIndex);
     });
 
     next.addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % imagenes.length;
-      cambiarImagen(currentIndex);
+        currentIndex = (currentIndex + 1) % imagenes.length;
+        updateImage(currentIndex);
     });
 
-  } catch (err) {
-    console.error("Error al cargar el detalle:", err);
-    document.getElementById('item-detalle-container').innerHTML = '<p>Error al cargar el producto.</p>';
-  }
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) lightbox.remove();
+    });
+
+    document.addEventListener('keydown', function onKey(e) {
+        if (e.key === 'Escape') {
+            lightbox.remove();
+            document.removeEventListener('keydown', onKey);
+        }
+    });
 }
 
 function comprar(id) {
-  window.location.href = `confirmacion.html?id=${id}`;
+    window.location.href = `confirmacion.html?id=${id}`;
 }
 
 document.addEventListener('DOMContentLoaded', cargarDetalle);
