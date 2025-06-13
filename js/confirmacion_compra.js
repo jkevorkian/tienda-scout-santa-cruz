@@ -116,30 +116,24 @@ document.getElementById('form-compra').addEventListener('submit', async (e) => {
     aclaraciones: `Nombre: ${nombre} | Email: ${email} | Tel: ${telefono} | Dirección: ${direccion}`
   };
 
-  const formData = new FormData();
-  formData.append('payload', JSON.stringify(payload));
+  const query = encodeURIComponent(JSON.stringify(payload));
+  const scriptURL = `https://script.google.com/macros/s/AKfycbyEpwdZTjDYsUA28pobduqicPIp8JoVVl2Y_Gw-f4gOTz06MQ77-b-7aC2y47Forq_l/exec?payload=${query}`;
 
   try {
-    const res = await fetch('https://script.google.com/macros/u/3/s/AKfycbyEpwdZTjDYsUA28pobduqicPIp8JoVVl2Y_Gw-f4gOTz06MQ77-b-7aC2y47Forq_l/exec', {
-      method: 'POST',
-      body: formData
-    });
-
+    const res = await fetch(scriptURL);
     const result = await res.json();
     if (result.success) {
       alert('✅ Pedido registrado con éxito (ID: ' + result.id + ')');
       localStorage.removeItem('carrito');
       location.reload();
     } else {
-      alert('❌ Ocurrió un error al registrar el pedido.');
+      alert('❌ Ocurrió un error al registrar el pedido: ' + result.error);
     }
   } catch (err) {
     console.error('Error al enviar pedido:', err);
     alert('❌ Error de conexión con el servidor.');
   }
 });
-
-
 });
 window.cambiarCantidad = cambiarCantidad;
 window.eliminarItem = eliminarItem;
