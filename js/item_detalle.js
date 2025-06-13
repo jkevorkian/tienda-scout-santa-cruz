@@ -1,0 +1,82 @@
+const hojaID = '149AZ8LZUXG2W2CMTtvU93hlvPZEwMk4Efd6rODXK4S4';
+const hojaNombre = 'productos';
+const url = `https://opensheet.elk.sh/${hojaID}/${hojaNombre}`;
+
+// Obtener ID del producto desde la URL
+const params = new URLSearchParams(window.location.search);
+const itemId = parseInt(params.get('id'));
+
+async function cargarDetalle() {
+  try {
+    const res = await fetch(url);
+    const productos = await res.json();
+
+    if (!productos[itemId]) {
+      document.getElementById('item-detalle-container').innerHTML = '<p>Producto no encontrado.</p>';
+      return;
+    }
+
+    const prod = productos[itemId];
+
+    // Obtener imágenes
+    let imagenes = [];
+    if (prod.imagenes) {
+      imagenes = prod.imagenes.includes('|')
+        ? prod.imagenes.split('|').map(url => url.trim())
+        : [prod.imagenes.trim()];
+    }
+    if (imagenes.length === 0 || !imagenes[0]) {
+      imagenes = ['https://www.carrielou.co.uk/image/cache/placeholder-550x550.png'];
+    }
+
+    let currentIndex = 0;
+
+    const container = document.getElementById('item-detalle-container');
+    container.innerHTML = `
+      <div class="detalle-producto">
+        <div class="carrusel">
+          <button class="prev">&#10094;</button>
+          <img src="${imagenes[0]}" alt="${prod.nombre}" class="imagen-activa fade">
+          <button class="next">&#10095;</button>
+        </div>
+        <div class="detalle-info">
+          <h2>${prod.nombre}</h2>
+          <p>${prod.descripcion}</p>
+          <p><strong>Precio: $${prod.precio}</strong></p>
+          <button class="btn-comprar" onclick="comprar(${itemId})">Comprar</button>
+        </div>
+      </div>
+    `;
+
+    const img = container.querySelector('.carrusel img');
+    const prev = container.querySelector('.prev');
+    const next = container.querySelector('.next');
+
+    const cambiarImagen = (i) => {
+      img.classList.remove('fade');
+      void img.offsetWidth;
+      img.src = imagenes[i];
+      img.classList.add('fade');
+    };
+
+    prev.addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + imagenes.length) % imagenes.length;
+      cambiarImagen(currentIndex);
+    });
+
+    next.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % imagenes.length;
+      cambiarImagen(currentIndex);
+    });
+
+  } catch (err) {
+    console.error("Error al cargar el detalle:", err);
+    document.getElementById('item-detalle-container').innerHTML = '<p>Error al cargar el producto.</p>';
+  }
+}
+
+function comprar(id) {
+  window.location.href = `confirmacion.html?id=${id}`;
+}
+
+document.addEventListener('DOMContentLoaded', cargarDetalle);

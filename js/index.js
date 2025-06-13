@@ -45,7 +45,11 @@ async function cargarProductos() {
           <p>${prod.descripcion}</p>
           <p><strong>$${prod.precio}</strong></p>
         `;
-      
+        
+        contenedor.appendChild(card);
+        card.addEventListener('click', () => {
+          window.location.href = `html/item_detalle.html?id=${index}`;
+        });
         contenedor.appendChild(card);
       
         // Lógica del carrusel
