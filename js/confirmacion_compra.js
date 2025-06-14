@@ -95,46 +95,73 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(id).addEventListener('input', validarFormulario);
     });
 
-document.getElementById('form-compra').addEventListener('submit', async (e) => {
-  e.preventDefault();
+    document.getElementById('form-compra').addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-  const nombre = document.getElementById('nombre').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const telefono = document.getElementById('telefono').value.trim();
-  const direccion = document.getElementById('direccion').value.trim();
-  const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+        const nombreRaw = document.getElementById('nombre').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const telefonoRaw = document.getElementById('telefono').value.trim();
+        const direccion = document.getElementById('direccion').value.trim();
 
-  const monto = carrito.reduce((acc, item) => {
-    const prod = productos.find(p => parseInt(p.id) === item.id || productos.indexOf(p) === item.id);
-    return acc + parseFloat(prod.precio) * item.cantidad;
-  }, 0);
+        const carritoGuardado = JSON.parse(localStorage.getItem('carrito') || '[]');
 
-  const formData = new FormData();
-  formData.append('entry.1022104370', 'pendiente'); // estado
-  formData.append('entry.1396134251', new Date().toISOString()); // fecha
-  formData.append('entry.328135372', JSON.stringify(carrito)); // items (como JSON)
-  formData.append('entry.1787440899', monto.toFixed(2)); // monto
+        const monto = carritoGuardado.reduce((acc, item) => {
+            const prod = productos.find(p => parseInt(p.id) === item.id || productos.indexOf(p) === item.id);
+            return acc + parseFloat(prod.precio) * item.cantidad;
+        }, 0);
 
-  formData.append('entry.408980864', nombre);     // nombre
-  formData.append('entry.363687813', email);      // email
-  formData.append('entry.371394709', telefono);   // telefono
-  formData.append('entry.845087169', direccion);  // direccion
+        const formData = new FormData();
+        formData.append('entry.1022104370', 'pendiente'); // estado
+        formData.append('entry.1396134251', new Date().toISOString()); // fecha
+        formData.append('entry.328135372', JSON.stringify(carritoGuardado)); // items
+        formData.append('entry.1787440899', monto.toFixed(2)); // monto
 
-  try {
-    await fetch('https://docs.google.com/forms/d/e/1FAIpQLSd1mZzTrJc6ifYlVbaaWfA75SjL4VbJoA7DQ0kx0xg5U_oNlg/formResponse', {
-      method: 'POST',
-      mode: 'no-cors',
-      body: formData
+        formData.append('entry.408980864', nombreRaw);
+        formData.append('entry.363687813', email);
+        formData.append('entry.371394709', telefonoRaw);
+        formData.append('entry.845087169', direccion);
+
+        try {
+            await fetch('https://docs.google.com/forms/d/e/1FAIpQLSd1mZzTrJc6ifYlVbaaWfA75SjL4VbJoA7DQ0kx0xg5U_oNlg/formResponse', {
+                method: 'POST',
+                mode: 'no-cors',
+                body: formData
+            });
+
+            alert('✅ Pedido enviado con éxito');
+
+            if (confirm("¿Quieres confirmar el pedido por WhatsApp?")) {
+                const nombre = encodeURIComponent(nombreRaw);
+                const telefono = encodeURIComponent(telefonoRaw);
+
+                let textoProductos = '';
+                carritoGuardado.forEach(item => {
+                    const prod = productos.find(p => parseInt(p.id) === item.id || productos.indexOf(p) === item.id);
+                    if (prod) {
+                        textoProductos += `- ${prod.nombre} (x${item.cantidad})\n`;
+                    }
+                });
+
+                const mensaje = encodeURIComponent(
+                    `Hola! Soy ${decodeURIComponent(nombre)} (${decodeURIComponent(telefono)}).\n` +
+                    `Acabo de realizar un pedido en la tienda scout con estos productos:\n\n` +
+                    `${textoProductos}\n` +
+                    `💰 Total: $${monto.toLocaleString()}`
+                );
+
+                const url = `https://wa.me/541134438689?text=${mensaje}`;
+                window.open(url, '_blank');
+            }
+
+            localStorage.removeItem('carrito');
+            location.reload();
+
+        } catch (err) {
+            console.error('❌ Error al enviar pedido:', err);
+            alert('❌ Error al registrar el pedido.');
+        }
     });
 
-    alert('✅ Pedido enviado con éxito');
-    localStorage.removeItem('carrito');
-    location.reload();
-  } catch (err) {
-    console.error('Error al enviar pedido:', err);
-    alert('❌ Error al registrar el pedido.');
-  }
-});
 
 });
 window.cambiarCantidad = cambiarCantidad;
