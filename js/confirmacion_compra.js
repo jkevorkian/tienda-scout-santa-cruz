@@ -88,6 +88,11 @@ function validarFormulario() {
     document.getElementById('btn-comprar').disabled = !valido;
 }
 
+function cerrarModal() {
+    document.getElementById('whatsapp-modal').classList.add('hidden');
+    location.reload();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     cargarProductos();
 
@@ -128,34 +133,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: formData
             });
 
-            alert('✅ Pedido enviado con éxito');
+            let textoProductos = '';
+            carritoGuardado.forEach(item => {
+                const prod = productos.find(p => parseInt(p.id) === item.id || productos.indexOf(p) === item.id);
+                if (prod) {
+                    textoProductos += `- ${prod.nombre} (x${item.cantidad})\n`;
+                }
+            });
+            const nombre = encodeURIComponent(nombreRaw);
+            const telefono = encodeURIComponent(telefonoRaw);
+            const mensaje = encodeURIComponent(
+                `Hola! Soy ${decodeURIComponent(nombre)} (${decodeURIComponent(telefono)}).\n` +
+                `Acabo de realizar un pedido en la tienda scout con estos productos:\n\n` +
+                `${textoProductos}\n` +
+                `💰 Total: $${monto.toLocaleString()}`
+            );
+            const urlWsp = `https://wa.me/541134438689?text=${mensaje}`;
 
             if (confirm("¿Quieres confirmar el pedido por WhatsApp?")) {
-                const nombre = encodeURIComponent(nombreRaw);
-                const telefono = encodeURIComponent(telefonoRaw);
-
-                let textoProductos = '';
-                carritoGuardado.forEach(item => {
-                    const prod = productos.find(p => parseInt(p.id) === item.id || productos.indexOf(p) === item.id);
-                    if (prod) {
-                        textoProductos += `- ${prod.nombre} (x${item.cantidad})\n`;
-                    }
-                });
-
-                const mensaje = encodeURIComponent(
-                    `Hola! Soy ${decodeURIComponent(nombre)} (${decodeURIComponent(telefono)}).\n` +
-                    `Acabo de realizar un pedido en la tienda scout con estos productos:\n\n` +
-                    `${textoProductos}\n` +
-                    `💰 Total: $${monto.toLocaleString()}`
-                );
-
-                const url = `https://wa.me/541134438689?text=${mensaje}`;
-                window.open(url, '_blank');
+                document.getElementById('whatsapp-link').href = urlWsp;
+                document.getElementById('whatsapp-modal').classList.remove('hidden');
+                window.open(urlWsp, '_blank');
+                localStorage.removeItem('carrito');
             }
-
-            localStorage.removeItem('carrito');
-            location.reload();
-
         } catch (err) {
             console.error('❌ Error al enviar pedido:', err);
             alert('❌ Error al registrar el pedido.');
@@ -166,3 +166,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 window.cambiarCantidad = cambiarCantidad;
 window.eliminarItem = eliminarItem;
+window.cerrarModal = cerrarModal;
+
