@@ -95,7 +95,7 @@ function cerrarModal() {
 
 document.addEventListener('DOMContentLoaded', () => {
     cargarProductos();
-
+    actualizarContadorCarrito();
     ['nombre', 'email', 'telefono'].forEach(id => {
         document.getElementById(id).addEventListener('input', validarFormulario);
     });
@@ -164,6 +164,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 });
+
+function actualizarContadorCarrito() {
+  const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+  const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+  const badge = document.getElementById('cart-count');
+  if (badge) badge.textContent = totalItems;
+}
+
 window.cambiarCantidad = cambiarCantidad;
 window.eliminarItem = eliminarItem;
 window.cerrarModal = cerrarModal;
