@@ -116,6 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 0);
 
         const formData = new FormData();
+        formData.append('entry.1615814585', `ID-${Date.now()}`); // 🆕 id
         formData.append('entry.1022104370', 'pendiente'); // estado
         formData.append('entry.1396134251', new Date().toISOString()); // fecha
         formData.append('entry.328135372', JSON.stringify(carritoGuardado)); // items
@@ -127,49 +128,49 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('entry.845087169', direccion);
 
         try {
-            await fetch('https://docs.google.com/forms/d/e/1FAIpQLSd1mZzTrJc6ifYlVbaaWfA75SjL4VbJoA7DQ0kx0xg5U_oNlg/formResponse', {
-                method: 'POST',
-                mode: 'no-cors',
-                body: formData
-            });
+        await fetch('https://docs.google.com/forms/u/3/d/1T65AeuYJcgO8es0ja8qm9puIu8B0t8w6DJ7cx6YweZ0/formResponse', {
+            method: 'POST',
+            mode: 'no-cors',
+            body: formData
+        });
 
-            let textoProductos = '';
-            carritoGuardado.forEach(item => {
-                const prod = productos.find(p => parseInt(p.id) === item.id || productos.indexOf(p) === item.id);
-                if (prod) {
-                    textoProductos += `- ${prod.nombre} (x${item.cantidad})\n`;
-                }
-            });
-            const nombre = encodeURIComponent(nombreRaw);
-            const telefono = encodeURIComponent(telefonoRaw);
-            const mensaje = encodeURIComponent(
-                `Hola! Soy ${decodeURIComponent(nombre)} (${decodeURIComponent(telefono)}).\n` +
-                `Acabo de realizar un pedido en la tienda scout con estos productos:\n\n` +
-                `${textoProductos}\n` +
-                `💰 Total: $${monto.toLocaleString()}`
-            );
-            const urlWsp = `https://wa.me/541134438689?text=${mensaje}`;
-
-            if (confirm("¿Quieres confirmar el pedido por WhatsApp?")) {
-                document.getElementById('whatsapp-link').href = urlWsp;
-                document.getElementById('whatsapp-modal').classList.remove('hidden');
-                window.open(urlWsp, '_blank');
-                localStorage.removeItem('carrito');
+        let textoProductos = '';
+        carritoGuardado.forEach(item => {
+            const prod = productos.find(p => parseInt(p.id) === item.id || productos.indexOf(p) === item.id);
+            if (prod) {
+                textoProductos += `- ${prod.nombre} (x${item.cantidad})\n`;
             }
-        } catch (err) {
-            console.error('❌ Error al enviar pedido:', err);
-            alert('❌ Error al registrar el pedido.');
+        });
+        const nombre = encodeURIComponent(nombreRaw);
+        const telefono = encodeURIComponent(telefonoRaw);
+        const mensaje = encodeURIComponent(
+            `Hola! Soy ${decodeURIComponent(nombre)} (${decodeURIComponent(telefono)}).\n` +
+            `Acabo de realizar un pedido en la tienda scout con estos productos:\n\n` +
+            `${textoProductos}\n` +
+            `💰 Total: $${monto.toLocaleString()}`
+        );
+        const urlWsp = `https://wa.me/541134438689?text=${mensaje}`;
+
+        if (confirm("¿Quieres confirmar el pedido por WhatsApp?")) {
+            document.getElementById('whatsapp-link').href = urlWsp;
+            document.getElementById('whatsapp-modal').classList.remove('hidden');
+            window.open(urlWsp, '_blank');
+            localStorage.removeItem('carrito');
         }
-    });
+    } catch (err) {
+        console.error('❌ Error al enviar pedido:', err);
+        alert('❌ Error al registrar el pedido.');
+    }
+});
 
 
 });
 
 function actualizarContadorCarrito() {
-  const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-  const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
-  const badge = document.getElementById('cart-count');
-  if (badge) badge.textContent = totalItems;
+    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+    const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+    const badge = document.getElementById('cart-count');
+    if (badge) badge.textContent = totalItems;
 }
 
 window.cambiarCantidad = cambiarCantidad;
