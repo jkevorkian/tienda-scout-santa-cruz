@@ -83,6 +83,15 @@ async function cargarDetalle() {
 function crearLightbox(imagenes, startIndex) {
     let currentIndex = startIndex;
 
+    // Helper to modify Google Drive URL for zoom
+    function getZoomUrl(url) {
+        if (url.includes('drive.google.com/thumbnail?id=')) {
+            // If already has ?id=, add sz param before id
+            return url.replace('thumbnail?id=', 'thumbnail?sz=w400&id=');
+        }
+        return url;
+    }
+
     // Create lightbox container
     const lightbox = document.createElement('div');
     lightbox.classList.add('lightbox');
@@ -91,7 +100,7 @@ function crearLightbox(imagenes, startIndex) {
     lightbox.innerHTML = `
       <div class="lightbox-content">
         <button class="lightbox-prev">&#10094;</button>
-        <img src="${imagenes[currentIndex]}" alt="zoomed image">
+        <img src="${getZoomUrl(imagenes[currentIndex])}" alt="zoomed image">
         <button class="lightbox-next">&#10095;</button>
       </div>
     `;
@@ -103,7 +112,7 @@ function crearLightbox(imagenes, startIndex) {
     const next = lightbox.querySelector('.lightbox-next');
 
     const updateImage = (i) => {
-        img.src = imagenes[i];
+        img.src = getZoomUrl(imagenes[i]);
     };
 
     prev.addEventListener('click', () => {

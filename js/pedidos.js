@@ -5,25 +5,21 @@ const productosSheet = 'productos';
 const pedidosURL = `https://opensheet.elk.sh/${hojaID}/${pedidosSheet}`;
 const productosURL = `https://opensheet.elk.sh/${hojaID}/${productosSheet}`;
 
-let productos = []; // Array of products
-let productosPorID = {}; // Map of product.id -> producto
+let productos = [];
+let productosPorID = {};
 let pedidos = [];
 
 async function cargarPedidos() {
   try {
     const resProductos = await fetch(productosURL);
     productos = await resProductos.json();
-    productosPorID = {};
     productos.forEach(p => {
       const idNum = parseInt(p.id);
       if (!isNaN(idNum)) productosPorID[idNum] = p;
     });
 
-    console.log("Productos cargados:", productos);
-
     const resPedidos = await fetch(pedidosURL);
     pedidos = await resPedidos.json();
-    console.log("Pedidos cargados:", pedidos);
 
     renderTabla(pedidos);
   } catch (err) {
@@ -40,15 +36,20 @@ function renderTabla(data) {
 
   let html = '<table class="tabla-pedidos"><thead><tr>';
   html += `
-    <th>Fecha</th>
-    <th>Estado</th>
-    <th>Items</th>
-    <th>Monto</th>
-    <th>Nombre</th>
-    <th>Email</th>
-    <th>Teléfono</th>
-    <th>Dirección</th>
+    <th data-col="Marca temporal">Fecha</th>
+    <th data-col="estado">Estado</th>
+    <th data-col="items">Items</th>
+    <th data-col="monto">Monto</th>
+    <th data-col="nombre">Nombre</th>
+    <th data-col="email">Email</th>
+    <th data-col="telefono">Teléfono</th>
+    <th data-col="direccion">Dirección</th>
+    <th data-col="notas">Notas</th>
   `;
+  html += '</tr><tr class="filtros">';
+  ["Marca temporal", "estado", "items", "monto", "nombre", "email", "telefono", "direccion", "notas"].forEach(col => {
+    html += `<td><input type="text" data-filtro="${col}" placeholder="Filtrar..."/></td>`;
+  });
   html += '</tr></thead><tbody>';
 
   data.forEach(pedido => {
@@ -62,39 +63,65 @@ function renderTabla(data) {
     html += `<td>${pedido['email'] || ''}</td>`;
     html += `<td>${pedido['telefono'] || ''}</td>`;
     html += `<td>${pedido['direccion'] || ''}</td>`;
+    html += `<td>${pedido['notas'] || ''}</td>`;
     html += '</tr>';
   });
 
   html += '</tbody></table>';
   document.getElementById('tabla-pedidos-container').innerHTML = html;
-}
 
+  document.querySelectorAll('.tabla-pedidos th').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.getAttribute('data-col');
+      if (!col) return;
+      const ordenAsc = th.classList.toggle('orden-asc');
+      th.classList.toggle('orden-desc', !ordenAsc);
+
+      const dataOrdenada = [...data].sort((a, b) => {
+        const aVal = (a[col] || '').toString().toLowerCase();
+        const bVal = (b[col] || '').toString().toLowerCase();
+        return ordenAsc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+      });
+
+      renderTabla(dataOrdenada);
+    });
+  });
+
+  setTimeout(() => {
+    document.querySelectorAll('input[data-filtro]').forEach(input => {
+      input.addEventListener('input', () => {
+        const filtros = {};
+        document.querySelectorAll('input[data-filtro]').forEach(i => {
+          const val = i.value.trim().toLowerCase();
+          if (val) filtros[i.dataset.filtro] = val;
+        });
+
+        const filtrados = pedidos.filter(pedido => {
+          return Object.entries(filtros).every(([col, val]) =>
+            (pedido[col] || '').toLowerCase().includes(val)
+          );
+        });
+
+        renderTabla(filtrados);
+      });
+    });
+  }, 0);
+}
 
 function parsearItems(itemsString) {
   if (!itemsString || typeof itemsString !== 'string' || itemsString.trim() === '') {
-    console.warn("Items vacío o indefinido:", itemsString);
     return '-';
   }
 
   try {
-    console.log("Intentando parsear Items:", itemsString);
     const items = JSON.parse(itemsString);
     return items.map(item => {
       const producto = productosPorID[item.id];
       return producto ? `${producto.nombre} (x${item.cantidad})` : `Producto ID ${item.id} (x${item.cantidad})`;
     }).join(', ');
   } catch (err) {
-    console.error("❌ Error parseando Items JSON:", err, itemsString);
     return `❌ Error JSON`;
   }
 }
-
-document.getElementById('filtro').addEventListener('input', function () {
-  const texto = this.value.toLowerCase();
-  const filas = document.querySelectorAll('.tabla-pedidos tbody tr');
-  filas.forEach(fila => {
-    fila.style.display = fila.textContent.toLowerCase().includes(texto) ? '' : 'none';
-  });
-});
 
 document.addEventListener('DOMContentLoaded', cargarPedidos);
