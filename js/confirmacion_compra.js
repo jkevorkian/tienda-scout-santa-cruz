@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `${textoProductos}\n` +
             `💰 Total: $${monto.toLocaleString()}`
         );
-        const urlWsp = `https://wa.me/541134438689?text=${mensaje}`;
+        const urlWsp = `https://wa.me/541135946924?text=${mensaje}`;
 
         if (confirm("¿Quieres confirmar el pedido por WhatsApp?")) {
             document.getElementById('whatsapp-link').href = urlWsp;
