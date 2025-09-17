@@ -570,3 +570,22 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+/* Stock.html */
+.tabla-stock {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+.tabla-stock th, .tabla-stock td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: left;
+}
+.tabla-stock th {
+  background: #388e3c;
+  color: #fff;
+}
+.tabla-stock tr:nth-child(even) {
+  background: #f7f7f7;
+}
