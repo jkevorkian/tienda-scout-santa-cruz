@@ -39,11 +39,17 @@ async function cargarProductos() {
           </div>
         `;
       
+        let stockMsg = '';
+        if (parseInt(prod.stock) <= 0) {
+          stockMsg = `<p style="color:#e53935;font-weight:bold;">Sin stock</p>`;
+        }
+      
         card.innerHTML = `
           ${galeriaHTML}
           <h3>${prod.nombre}</h3>
           <p>${prod.descripcion}</p>
           <p><strong>$${prod.precio}</strong></p>
+          ${stockMsg}
         `;
 
         contenedor.appendChild(card);
